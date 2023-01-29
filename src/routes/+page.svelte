@@ -12,8 +12,11 @@
 	});
 </script>
 
-<p>Hi Martin!</p>
-
+<div class="flex justify-end mb-4">
+	<a href="/create" class="px-3 py-1.5 hover:bg-stone-900 rounded-lg"
+		>Add post</a
+	>
+</div>
 <div class="flex flex-col gap-y-4 mt-6">
 	{#each posts as post}
 		<PostComponent {post} />

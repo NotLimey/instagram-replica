@@ -6,6 +6,7 @@
 	import Login from '../components/Login.svelte';
 	import { user } from '../stores/auth.store';
 	import { Toaster } from 'svelte-french-toast';
+	import Navbar from '$components/Navbar.svelte';
 
 	const unsubscribe = onAuthStateChanged(auth, (u) => user.set(u));
 
@@ -19,10 +20,13 @@
 		className: 'bg-gray-800 text-white',
 	}}
 />
-<div class="my-12 mx-auto px-5 max-w-xl">
+<div>
 	{#if $user}
-		<main><slot /></main>
+		<Navbar />
+		<main class="my-12 mx-auto px-5 max-w-xl"><slot /></main>
 	{:else}
-		<Login />
+		<main class="my-12 mx-auto px-5 max-w-xl">
+			<Login />
+		</main>
 	{/if}
 </div>
