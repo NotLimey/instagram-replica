@@ -15,7 +15,7 @@
 
 <div class="my-12 mx-auto px-5 max-w-xl">
 	{#if $user}
-		<slot />
+		<main><slot /></main>
 	{:else}
 		<Login />
 	{/if}
