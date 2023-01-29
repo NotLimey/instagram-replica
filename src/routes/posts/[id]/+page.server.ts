@@ -12,10 +12,7 @@ export const load: PageServerLoad = async ({ params }) => {
     // get post and first 20 comments for the post
     const post = await posts.aggregate(get(id)).next();
 
-    console.log(post)
-
     if (!post) {
-        console.log("Post not found")
         throw error(404, "Post not found");
     }
 

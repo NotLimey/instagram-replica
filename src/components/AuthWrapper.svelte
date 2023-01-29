@@ -17,8 +17,6 @@
 		token.set(t);
 		const _account = await fetcher(t, '/api/user');
 
-		console.log(_account);
-
 		account.set(_account.data);
 		loading.set(false);
 	});

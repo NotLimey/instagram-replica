@@ -116,5 +116,9 @@ export const GET: RequestHandler = async ({ url, request }) => {
 
     // const data = await posts.find().sort({ addedAt: -1 }).skip(SKIP).limit(20).toArray();
 
-    return json(data);
+    return json(data, {
+        headers: {
+            "Cache-Control": "max-age=0, s-maxage=300",
+        }
+    });
 }
