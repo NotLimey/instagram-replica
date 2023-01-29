@@ -15,17 +15,19 @@
 	};
 </script>
 
-<a href="/posts/{post._id}" class="">
+<div>
 	<div class="flex items-center gap-x-2 mb-2">
 		<p class="text-xl">{post.user.displayName}</p>
 		<span class="w-1 h-1 bg-gray-100 rounded-full" />
 		<p class="text-gray-200">{getTimeSincePost(post)}</p>
 	</div>
-	<img
-		src={post.url}
-		alt=""
-		class="aspect-square object-cover rounded-md min-w-full"
-	/>
+	<a href="/post/{post._id}">
+		<img
+			src={post.url}
+			alt=""
+			class="aspect-square object-cover rounded-md min-w-full"
+		/>
+	</a>
 	<div class="py-2 flex items-center gap-x-2">
 		<Icon
 			src={Chat}
@@ -44,4 +46,4 @@
 	<p class="text-stone-300">
 		{post.description}
 	</p>
-</a>
+</div>
