@@ -1,6 +1,7 @@
 <script lang="ts">
 	import { storage } from '$lib/firebase';
 	import { generateId } from '$lib/id/generateId';
+	import { user } from '$stores/auth.store';
 	import { getDownloadURL, ref, uploadBytes } from 'firebase/storage';
 	import toast from 'svelte-french-toast';
 
@@ -16,7 +17,20 @@
 		const data = {
 			description,
 			url,
+			uid: $user?.uid,
 		};
+
+		await fetch('/api/posts', {
+			method: 'POST',
+			headers: {
+				'Content-Type': 'application/json',
+			},
+			body: JSON.stringify(data),
+		});
+
+		toast.success('Post created');
+		file = null;
+		description = '';
 	};
 </script>
 

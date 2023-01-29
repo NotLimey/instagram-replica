@@ -1,10 +1,10 @@
 
-import clientPromise from "$lib/mongo";
+import clientPromise, { getCollection } from "$lib/mongo";
 import { json, type RequestHandler } from "@sveltejs/kit";
 
 
 export const POST: RequestHandler = async ({ request }) => {
-    const { url, description } = await request.json();
+    const { url, description, uid } = await request.json();
 
     if (!url || !description) {
         return json({
@@ -13,17 +13,23 @@ export const POST: RequestHandler = async ({ request }) => {
             status: 400,
         })
     }
+    const posts = await getCollection("posts");
 
-    const client = await clientPromise;
-    const db = client.db("TestingMangoDb");
-
-    await db.collection("posts").insertOne({
+    await posts.insertOne({
         url: url,
         description: description,
+        uid: uid,
         addedAt: new Date(),
     })
 
     return json({}, {
         status: 201,
     })
+}
+
+export const GET: RequestHandler = async () => {
+    const posts = await getCollection("posts");
+    const data = await posts.find().sort({ addedAt: -1 }).limit(20).toArray();
+
+    return json(data);
 }
