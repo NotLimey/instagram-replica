@@ -2,22 +2,13 @@
 	import PostComponent from '$components/PostComponent.svelte';
 	import { account, token, user } from '$stores/auth.store';
 	import fetcher from '$utils/fetcher';
-	import getTimeSincePost from '$utils/getTimeSincePost';
-	import { Chat, Heart, Icon } from 'svelte-hero-icons';
 	import type { Post } from '../../../types/post.types';
 
 	export let data: Post;
 	export let message: string = '';
 
-	const like = async () => {
-		await fetcher($token, `/api/posts/like?postId=${data._id}`, {
-			method: data.liked ? 'DELETE' : 'data',
-		});
-		data.likes = data.likes + (data.liked ? -1 : 1);
-		data.liked = !data.liked;
-	};
-
 	const comment = async () => {
+		if (!data) return;
 		await fetcher($token, `/api/posts/comments?postId=${data._id}`, {
 			method: 'POST',
 			data: { message },
@@ -25,6 +16,12 @@
 		data.comments.push({ message, uid: $user!.uid, user: $account! });
 		message = '';
 	};
+
+	token.subscribe(async (t) => {
+		if (!t) return;
+		const res = await fetcher(t, `/api/posts/like?postId=${data._id}`);
+		data.liked = res.data.liked || false;
+	});
 </script>
 
 <PostComponent post={data} />

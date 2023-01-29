@@ -1,33 +1,11 @@
 <script>
-	import { auth } from '$lib/firebase';
-	import { onAuthStateChanged } from 'firebase/auth';
-	import { onDestroy } from 'svelte';
-	import '../app.css';
-	import Login from '../components/Login.svelte';
-	import { account, loading, token, user } from '../stores/auth.store';
-	import { Toaster } from 'svelte-french-toast';
+	import AuthWrapper from '$components/AuthWrapper.svelte';
 	import Navbar from '$components/Navbar.svelte';
 	import Register from '$components/Register.svelte';
-	import fetcher from '$utils/fetcher';
-
-	const unsubscribe = onAuthStateChanged(auth, async (u) => {
-		user.set(u);
-		if (!u) {
-			return loading.set(false);
-		}
-		const t = await u.getIdToken();
-		token.set(t);
-		loading.set(false);
-		const _account = await fetcher(t, '/api/user');
-
-		console.log(_account);
-
-		account.set(_account.data);
-	});
-
-	onDestroy(() => {
-		unsubscribe();
-	});
+	import { Toaster } from 'svelte-french-toast';
+	import '../app.css';
+	import Login from '../components/Login.svelte';
+	import { loading, user } from '../stores/auth.store';
 </script>
 
 <Toaster
@@ -35,18 +13,6 @@
 		className: 'bg-gray-800 text-white',
 	}}
 />
-<div>
-	{#if $loading}
-		<div>
-			<p>..Loading</p>
-		</div>
-	{:else if $user}
-		<Navbar />
-		<main class="my-12 mx-auto px-5 max-w-xl"><slot /></main>
-	{:else}
-		<main class="my-12 mx-auto px-5 max-w-xl">
-			<Login />
-			<Register />
-		</main>
-	{/if}
-</div>
+<AuthWrapper>
+	<slot />
+</AuthWrapper>

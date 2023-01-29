@@ -60,3 +60,38 @@ export const DELETE: RequestHandler = async ({ url, request }) => {
         status: 201,
     });
 }
+
+export const GET: RequestHandler = async ({ url, request }) => {
+    const user = await getUser(request);
+
+    if (!user) {
+        return json({
+            message: "You are not authenticated",
+        }, {
+            status: 401,
+        })
+    }
+
+    const postId = url.searchParams.get("postId");
+
+    if (!postId) {
+        return json({
+            message: "Missing required fields",
+        }, {
+            status: 400,
+        })
+    }
+
+    const likes = await getCollection("likes");
+
+    const existingLike = await likes.findOne({
+        postId: new ObjectId(postId),
+        uid: user.uid,
+    });
+
+    return json({
+        liked: !!existingLike,
+    }, {
+        status: 200,
+    })
+}

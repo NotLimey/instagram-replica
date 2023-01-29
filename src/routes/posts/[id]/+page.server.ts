@@ -2,6 +2,7 @@ import { getCollection } from "$lib/mongo";
 import { ObjectId } from "mongodb";
 import type { PageServerLoad } from "./$types";
 import { error } from "@sveltejs/kit";
+import { get } from "../../../queries/post/post";
 
 export const load: PageServerLoad = async ({ params }) => {
     const { id } = params;
@@ -9,67 +10,9 @@ export const load: PageServerLoad = async ({ params }) => {
     const posts = await getCollection("posts")
 
     // get post and first 20 comments for the post
-    const post = await posts.aggregate([
-        {
-            $match: {
-                _id: new ObjectId(id),
-            },
-        },
-        // get all comments on the post and sort them by date, also get the user who posted the comment
-        {
-            $lookup: {
-                from: "comments",
-                let: { postId: "$_id" },
-                pipeline: [
-                    {
-                        $match: {
-                            $expr: {
-                                $eq: ["$postId", "$$postId"],
-                            },
-                        },
-                    },
-                    {
-                        $sort: {
-                            addedAt: -1,
-                        },
-                    },
-                    {
-                        $limit: 20,
-                    },
-                    {
-                        $lookup: {
-                            from: "users",
-                            localField: "uid",
-                            foreignField: "uid",
-                            as: "user",
-                        },
-                    },
-                    {
-                        $addFields: {
-                            user: { $arrayElemAt: ["$user", 0] },
-                        },
-                    },
-                ],
-                as: "comments",
-            },
-        },
-        // also get the user who posted the post
-        {
-            $lookup: {
-                from: "users",
-                localField: "uid",
-                foreignField: "uid",
-                as: "user",
-            },
-        },
-        {
-            $addFields: {
-                user: { $arrayElemAt: ["$user", 0] },
-            },
-        },
+    const post = await posts.aggregate(get(id)).next();
 
-    ]).next();
-
+    console.log(post)
 
     if (!post) {
         console.log("Post not found")
