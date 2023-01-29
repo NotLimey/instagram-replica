@@ -1,12 +1,22 @@
+import { getUser } from "$lib/auth/getUser";
 import { getCollection } from "$lib/mongo";
 import { json, type RequestHandler } from "@sveltejs/kit";
 import { ObjectId } from "mongodb";
 
-export const POST: RequestHandler = async ({ url }) => {
-    const postId = url.searchParams.get("postId");
-    const uid = url.searchParams.get("uid");
+export const POST: RequestHandler = async ({ url, request }) => {
+    const user = await getUser(request);
 
-    if (!postId || !uid) {
+    if (!user) {
+        return json({
+            message: "You are not authenticated",
+        }, {
+            status: 401,
+        })
+    }
+
+    const postId = url.searchParams.get("postId");
+
+    if (!postId || !user.uid) {
         return json({
             message: "Missing required fields",
         }, {
@@ -18,7 +28,7 @@ export const POST: RequestHandler = async ({ url }) => {
 
     const existingLike = await likes.findOne({
         postId: new ObjectId(postId),
-        uid: uid,
+        uid: user.uid,
     });
 
     if (existingLike) {
@@ -40,7 +50,7 @@ export const POST: RequestHandler = async ({ url }) => {
 
     likes.insertOne({
         postId: new ObjectId(postId),
-        uid: uid,
+        uid: user.uid,
     })
 
     return json({}, {
@@ -48,9 +58,18 @@ export const POST: RequestHandler = async ({ url }) => {
     });
 }
 
-export const DELETE: RequestHandler = async ({ url }) => {
+export const DELETE: RequestHandler = async ({ url, request }) => {
+    const user = await getUser(request);
+
+    if (!user) {
+        return json({
+            message: "You are not authenticated",
+        }, {
+            status: 401,
+        })
+    }
+    const { uid } = user;
     const postId = url.searchParams.get("postId");
-    const uid = url.searchParams.get("uid");
 
     if (!postId || !uid) {
         return json({
