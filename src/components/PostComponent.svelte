@@ -6,11 +6,40 @@
 	export let post: Post;
 
 	const like = async () => {
-		await fetch(`/api/like?postId=${post._id}&uid=${$user?.uid}`, {
+		await fetch(`/api/posts/like?postId=${post._id}&uid=${$user?.uid}`, {
 			method: post.liked ? 'DELETE' : 'POST',
 		});
 		post.likes = post.likes + (post.liked ? -1 : 1);
 		post.liked = !post.liked;
+	};
+
+	const getTimeSincePost = () => {
+		const seconds = Math.floor(
+			(new Date().getTime() - new Date(post.addedAt).getTime()) / 1000
+		);
+
+		let interval = Math.floor(seconds / 31536000);
+
+		if (interval > 1) {
+			return interval + ' years';
+		}
+		interval = Math.floor(seconds / 2592000);
+		if (interval > 1) {
+			return interval + ' months';
+		}
+		interval = Math.floor(seconds / 86400);
+		if (interval > 1) {
+			return interval + ' days';
+		}
+		interval = Math.floor(seconds / 3600);
+		if (interval > 1) {
+			return interval + ' hours';
+		}
+		interval = Math.floor(seconds / 60);
+		if (interval > 1) {
+			return interval + ' minutes';
+		}
+		return Math.floor(seconds) + ' seconds';
 	};
 </script>
 
@@ -18,7 +47,7 @@
 	<div class="flex items-center gap-x-2 mb-2">
 		<p class="text-xl">Martin Myhre</p>
 		<span class="w-1 h-1 bg-gray-100 rounded-full" />
-		<p class="text-gray-200">2 hours</p>
+		<p class="text-gray-200">{getTimeSincePost()}</p>
 	</div>
 	<img
 		src={post.url}
