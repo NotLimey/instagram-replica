@@ -1,8 +1,7 @@
 import { getCollection } from "$lib/mongo";
-import { ObjectId } from "mongodb";
-import type { PageServerLoad } from "./$types";
 import { error } from "@sveltejs/kit";
 import { get } from "../../../queries/post/post";
+import type { PageServerLoad } from "./$types";
 
 export const load: PageServerLoad = async ({ params }) => {
     const { id } = params;
