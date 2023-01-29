@@ -1,4 +1,5 @@
 <script lang="ts">
+	import PostComponent from '$components/PostComponent.svelte';
 	import { token, user } from '$stores/auth.store';
 	import fetcher from '$utils/fetcher';
 	import getTimeSincePost from '$utils/getTimeSincePost';
@@ -26,30 +27,7 @@
 	};
 </script>
 
-<div class="flex items-center gap-x-2 mb-2">
-	<p class="text-xl">Martin Myhre</p>
-	<span class="w-1 h-1 bg-gray-100 rounded-full" />
-	<p class="text-gray-200">{getTimeSincePost(data)}</p>
-</div>
-<img
-	src={data.url}
-	alt=""
-	class="aspect-square object-cover rounded-md min-w-full"
-/>
-<div class="py-2 flex items-center gap-x-2">
-	<button on:click={like}>
-		<Icon
-			src={Heart}
-			class="w-6 h-6 hover:fill-red-500 hover:stroke-red-500 {data.liked
-				? 'fill-red-500 stroke-red-500'
-				: ''} cursor-pointer transition-colors"
-		/>
-	</button>
-	<p>{data.likes} Likes</p>
-</div>
-<p class="text-stone-300">
-	{data.description}
-</p>
+<PostComponent post={data} />
 
 <div class="mt-4">
 	<textarea

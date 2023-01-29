@@ -1,4 +1,5 @@
 <script lang="ts">
+	import { user } from '$stores/auth.store';
 	import type { Account } from '../../types/auth.types';
 	import type { Post } from '../../types/post.types';
 
@@ -17,13 +18,20 @@
 	<div>
 		<p class="text-lg text-stone-200">@{data.user.userName}</p>
 		<p class="text-lg text-stone-100">{data.user.displayName}</p>
+		{#if $user?.uid === data.user.uid}
+			<a
+				href="/signout"
+				class="bg-red-500/20 px-1 py-0.5 rounded-md mt-4 block text-center text-red-500 text-xs"
+				>Signout</a
+			>
+		{/if}
 	</div>
 </div>
 
 <div class="grid grid-cols-3 gap-4">
 	{#each data.posts as post}
 		<a
-			href="/{post._id}"
+			href="/posts/{post._id}"
 			class="w-full aspect-square overflow-hidden rounded-md"
 		>
 			<img

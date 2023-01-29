@@ -4,10 +4,11 @@
 	import { onDestroy } from 'svelte';
 	import '../app.css';
 	import Login from '../components/Login.svelte';
-	import { loading, token, user } from '../stores/auth.store';
+	import { account, loading, token, user } from '../stores/auth.store';
 	import { Toaster } from 'svelte-french-toast';
 	import Navbar from '$components/Navbar.svelte';
 	import Register from '$components/Register.svelte';
+	import fetcher from '$utils/fetcher';
 
 	const unsubscribe = onAuthStateChanged(auth, async (u) => {
 		user.set(u);
@@ -17,6 +18,11 @@
 		const t = await u.getIdToken();
 		token.set(t);
 		loading.set(false);
+		const _account = await fetcher(t, '/api/user');
+
+		console.log(_account);
+
+		account.set(_account.data);
 	});
 
 	onDestroy(() => {

@@ -11,12 +11,12 @@
 	<div>
 		<button on:click={logout}>Logout</button>
 	</div>
-	<div class="flex items-center gap-x-4">
+	<a href="/" class="flex items-center gap-x-4">
 		<p>Hi, {$user?.displayName}</p>
 		<img
 			src={$user?.photoURL}
 			alt=""
 			class="bg-stone-900 w-10 h-10 rounded-full border-none"
 		/>
-	</div>
+	</a>
 </nav>
