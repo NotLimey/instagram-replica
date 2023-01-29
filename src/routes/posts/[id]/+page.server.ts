@@ -15,12 +15,11 @@ export const load: PageServerLoad = async ({ params }) => {
                 _id: new ObjectId(id),
             },
         },
+        // get all comments on the post and sort them by date, also get the user who posted the comment
         {
             $lookup: {
                 from: "comments",
-                let: {
-                    postId: "$_id",
-                },
+                let: { postId: "$_id" },
                 pipeline: [
                     {
                         $match: {
@@ -32,30 +31,26 @@ export const load: PageServerLoad = async ({ params }) => {
                     {
                         $sort: {
                             addedAt: -1,
-
                         },
                     },
                     {
                         $limit: 20,
                     },
-                ],
-                as: "comments",
-            },
-        },
-        {
-            $addFields: {
-                comments: {
-                    $map: {
-                        input: "$comments",
-                        as: "comment",
-                        in: {
-                            _id: "$$comment._id",
-                            message: "$$comment.message",
-                            addedAt: "$$comment.addedAt",
-                            uid: "$$comment.uid",
+                    {
+                        $lookup: {
+                            from: "users",
+                            localField: "uid",
+                            foreignField: "uid",
+                            as: "user",
                         },
                     },
-                },
+                    {
+                        $addFields: {
+                            user: { $arrayElemAt: ["$user", 0] },
+                        },
+                    },
+                ],
+                as: "comments",
             },
         },
         // also get the user who posted the post
@@ -87,6 +82,11 @@ export const load: PageServerLoad = async ({ params }) => {
         comments: post.comments.map((comment: any) => ({
             ...comment,
             _id: comment._id.toString(),
+            postId: comment.postId.toString(),
+            user: {
+                ...comment.user,
+                _id: comment.user._id.toString(),
+            }
         })),
         user: {
             ...post.user,

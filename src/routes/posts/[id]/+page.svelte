@@ -1,6 +1,6 @@
 <script lang="ts">
 	import PostComponent from '$components/PostComponent.svelte';
-	import { token, user } from '$stores/auth.store';
+	import { account, token, user } from '$stores/auth.store';
 	import fetcher from '$utils/fetcher';
 	import getTimeSincePost from '$utils/getTimeSincePost';
 	import { Chat, Heart, Icon } from 'svelte-hero-icons';
@@ -22,7 +22,7 @@
 			method: 'POST',
 			data: { message },
 		});
-		data.comments.push({ message, uid: $user!.uid });
+		data.comments.push({ message, uid: $user!.uid, user: $account! });
 		message = '';
 	};
 </script>
@@ -48,9 +48,18 @@
 <div class="flex flex-col gap-y-2 mt-6">
 	<h2 class="mb-2">Comments</h2>
 	{#each data.comments as comment}
-		<div>
-			<p class="text-xs text-stone-300 mb-1">{comment.uid}</p>
-			<p>{comment.message}</p>
+		<div class="flex gap-x-2">
+			<img src={comment.user.photoURL} class="w-12 h-12 rounded-full" alt="" />
+			<div>
+				<div class="flex gap-x-1.5">
+					<p class="text-sm text-stone-100 mb-1">
+						<a href="/{comment.user.userName}" class="font-bold mr-2 text-white"
+							>@{comment.user.userName}</a
+						>
+					</p>
+				</div>
+				<p class="text-stone-300">{comment.message}</p>
+			</div>
 		</div>
 	{/each}
 </div>

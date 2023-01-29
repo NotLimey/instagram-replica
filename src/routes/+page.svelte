@@ -18,7 +18,7 @@
 		>Add post</a
 	>
 </div>
-<div class="flex flex-col gap-y-8 mt-6">
+<div class="flex flex-col gap-y-12 mt-6">
 	{#each posts as post}
 		<PostComponent {post} />
 	{/each}

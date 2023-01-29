@@ -6,6 +6,8 @@ export const load: PageServerLoad = async ({ params }) => {
 
     const users = await getCollection("users");
 
+    // get user and their following count also their followers count
+    // following document exists of uid and following(uid)
     const user = await users.findOne({
         userName: username,
     });
@@ -15,6 +17,16 @@ export const load: PageServerLoad = async ({ params }) => {
             status: 404,
         }
     }
+
+    const following = await getCollection("following");
+
+    const followingCount = await following.countDocuments({
+        following: user.uid,
+    });
+
+    const followersCount = await following.countDocuments({
+        uid: user.uid,
+    });
 
     const posts = await getCollection("posts");
 
@@ -30,6 +42,8 @@ export const load: PageServerLoad = async ({ params }) => {
         user: {
             ...user,
             _id: user._id.toString(),
-        }
+            following: followersCount,
+            followers: followingCount,
+        },
     }
 }

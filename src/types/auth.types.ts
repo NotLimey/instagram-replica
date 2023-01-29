@@ -7,3 +7,8 @@ export type Account = {
     uid: string;
     userName: string;
 }
+
+export type DetailedAccount = Account & {
+    followers: number;
+    following: number;
+}

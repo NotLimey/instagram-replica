@@ -21,12 +21,15 @@
 </script>
 
 <div>
-	<div class="flex items-center gap-x-2 mb-2">
-		<p class="text-xl">{post.user.displayName}</p>
-		<span class="w-1 h-1 bg-gray-100 rounded-full" />
-		<p class="text-gray-200">{getTimeSincePost(post)}</p>
+	<div class="mb-2 flex gap-x-2">
+		<img src={post.user.photoURL} class="w-8 h-8 rounded-full" alt="" />
+		<div class="flex items-center gap-x-2">
+			<a href="/{post.user.userName}" class="text-xl">@{post.user.userName}</a>
+			<span class="w-1 h-1 bg-gray-100 rounded-full" />
+			<p class="text-gray-200">{getTimeSincePost(post)}</p>
+		</div>
 	</div>
-	<a href="/post/{post._id}">
+	<a href="/posts/{post._id}">
 		<img
 			src={post.url}
 			alt=""

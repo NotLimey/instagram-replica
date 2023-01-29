@@ -57,7 +57,18 @@ export const GET: RequestHandler = async ({ url, request }) => {
 
     // get posts but also check if the user has liked the post likes can be found in the likes collection. all values in likes document are strings. Return a boolean
     // also get the user who posted the post
+    // only get posts of users that the current user is following. you can get the accounts the user follows from collection following. where uid is the current user uid
+
+    const following = await getCollection("following");
+    const follows = await following.find({ uid: uid }).map(x => x.following).toArray();
+
     const data = await posts.aggregate([
+        {
+            $match: {
+                uid: { $in: [...follows, uid] }
+
+            },
+        },
         {
             $lookup: {
                 from: "likes",
