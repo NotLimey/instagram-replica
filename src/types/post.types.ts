@@ -1,3 +1,4 @@
+import type { Account } from "./auth.types";
 
 
 export type Post = {
@@ -9,6 +10,7 @@ export type Post = {
     likes: number;
     liked: boolean;
     comments: Comment[];
+    user: Account;
 }
 
 export type Comment = {

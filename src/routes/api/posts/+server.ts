@@ -58,6 +58,7 @@ export const GET: RequestHandler = async ({ url, request }) => {
     console.log(uid)
 
     // get posts but also check if the user has liked the post likes can be found in the likes collection. all values in likes document are strings. Return a boolean
+    // also get the user who posted the post
     const data = await posts.aggregate([
         {
             $lookup: {
@@ -83,6 +84,20 @@ export const GET: RequestHandler = async ({ url, request }) => {
             $addFields: {
                 liked: { $gt: [{ $size: "$liked" }, 0] }
             }
+        },
+        {
+            $lookup: {
+                from: "users",
+                localField: "uid",
+                foreignField: "uid",
+                as: "user"
+            },
+        },
+        {
+            $addFields: {
+                user: { $arrayElemAt: ["$user", 0] }
+
+            },
         },
         { $sort: { addedAt: -1 } },
         { $skip: SKIP },
