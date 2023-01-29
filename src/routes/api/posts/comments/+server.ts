@@ -4,7 +4,7 @@ import { json } from "@sveltejs/kit";
 import { ObjectId } from "mongodb";
 import type { RequestHandler } from "../$types";
 
-export const POST: RequestHandler = async ({ request }) => {
+export const POST: RequestHandler = async ({ request, url }) => {
     const user = await getUser(request);
 
     if (!user) {
@@ -15,7 +15,8 @@ export const POST: RequestHandler = async ({ request }) => {
         })
     }
 
-    const { message, postId } = await request.json();
+    const postId = url.searchParams.get("postId");
+    const { message } = await request.json();
 
     if (!message || !postId) {
         return json({

@@ -8,7 +8,58 @@ export const load: PageServerLoad = async ({ params }) => {
 
     const posts = await getCollection("posts")
 
-    const post = await posts.findOne({ _id: new ObjectId(id) });
+    // get post and first 20 comments for the post
+    const post = await posts.aggregate([
+        {
+            $match: {
+                _id: new ObjectId(id),
+            },
+        },
+        {
+            $lookup: {
+                from: "comments",
+                let: {
+                    postId: "$_id",
+                },
+                pipeline: [
+                    {
+                        $match: {
+                            $expr: {
+                                $eq: ["$postId", "$$postId"],
+                            },
+                        },
+                    },
+                    {
+                        $sort: {
+                            addedAt: -1,
+
+                        },
+                    },
+                    {
+                        $limit: 20,
+                    },
+                ],
+                as: "comments",
+            },
+        },
+        {
+            $addFields: {
+                comments: {
+                    $map: {
+                        input: "$comments",
+                        as: "comment",
+                        in: {
+                            _id: "$$comment._id",
+                            message: "$$comment.message",
+                            addedAt: "$$comment.addedAt",
+                            uid: "$$comment.uid",
+                        },
+                    },
+                },
+            },
+        },
+    ]).next();
+
 
     if (!post) {
         throw error(404, "Post not found");
@@ -17,5 +68,9 @@ export const load: PageServerLoad = async ({ params }) => {
     return {
         ...post,
         _id: post._id.toString(),
+        comments: post.comments.map((comment: any) => ({
+            ...comment,
+            _id: comment._id.toString(),
+        })),
     };
 }

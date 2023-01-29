@@ -8,4 +8,10 @@ export type Post = {
     addedAt: Date;
     likes: number;
     liked: boolean;
+    comments: Comment[];
+}
+
+export type Comment = {
+    message: string;
+    uid: string;
 }
