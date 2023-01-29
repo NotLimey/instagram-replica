@@ -5,7 +5,7 @@
 
 	const login = async () => {
 		const user = await signInWithPopup(auth, new GoogleAuthProvider());
-		await axios('/api/user', {
+		await axios('/api/user/login', {
 			method: 'POST',
 			data: {
 				displayName: user.user.displayName,

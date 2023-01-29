@@ -41,6 +41,7 @@ export const POST: RequestHandler = async ({ request, url }) => {
             photoURL: photoURL,
             email: email,
             uid: uid,
+            userName: userName,
         }
     }, {
         upsert: true,

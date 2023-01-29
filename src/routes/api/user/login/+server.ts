@@ -1,6 +1,6 @@
+import { auth } from "$lib/admin";
 import { getCollection } from "$lib/mongo";
 import { json } from "@sveltejs/kit";
-import { ObjectId } from "mongodb";
 import type { RequestHandler } from "../$types";
 
 export const POST: RequestHandler = async ({ request, url }) => {
@@ -22,6 +22,8 @@ export const POST: RequestHandler = async ({ request, url }) => {
     });
 
     if (!existingUser) {
+        await auth.deleteUser(uid);
+
         return json({
             message: "User does not exist",
         }, {

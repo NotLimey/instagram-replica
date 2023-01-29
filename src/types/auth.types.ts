@@ -5,4 +5,5 @@ export type Account = {
     displayName: string;
     photoURL: string;
     uid: string;
+    userName: string;
 }

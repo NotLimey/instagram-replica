@@ -49,6 +49,8 @@
 		<p>{post.likes} Likes</p>
 	</div>
 	<p class="text-stone-300">
-		{post.description}
+		<a href="/{post.user.userName}" class="font-bold mr-2 text-white"
+			>@{post.user.userName}
+		</a>{post.description}
 	</p>
 </div>

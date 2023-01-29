@@ -58,19 +58,40 @@ export const load: PageServerLoad = async ({ params }) => {
                 },
             },
         },
+        // also get the user who posted the post
+        {
+            $lookup: {
+                from: "users",
+                localField: "uid",
+                foreignField: "uid",
+                as: "user",
+            },
+        },
+        {
+            $addFields: {
+                user: { $arrayElemAt: ["$user", 0] },
+            },
+        },
+
     ]).next();
 
 
     if (!post) {
+        console.log("Post not found")
         throw error(404, "Post not found");
     }
 
-    return {
+    const data = {
         ...post,
         _id: post._id.toString(),
         comments: post.comments.map((comment: any) => ({
             ...comment,
             _id: comment._id.toString(),
         })),
+        user: {
+            ...post.user,
+            _id: post.user._id.toString(),
+        },
     };
+    return data
 }
