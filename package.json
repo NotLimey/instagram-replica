@@ -23,6 +23,7 @@
 	},
 	"type": "module",
 	"dependencies": {
+		"firebase": "^9.16.0",
 		"svelte-hero-icons": "^4.1.3"
 	}
 }
