@@ -1,8 +1,15 @@
 <script lang="ts">
+	import { user } from '$stores/auth.store';
 	import { Chat, Icon, Heart } from 'svelte-hero-icons';
 	import type { Post } from '../types/post.types';
 
 	export let post: Post;
+
+	const like = async () => {
+		await fetch(`/api/like?postId=${post._id}&uid=${$user?.uid}`, {
+			method: 'POST',
+		});
+	};
 </script>
 
 <div>
@@ -17,10 +24,12 @@
 			src={Chat}
 			class="w-6 h-6 hover:fill-white/10 cursor-pointer transition-colors"
 		/>
-		<Icon
-			src={Heart}
-			class="w-6 h-6 hover:fill-red-500 hover:stroke-red-500 cursor-pointer transition-colors"
-		/>
+		<button on:click={like}>
+			<Icon
+				src={Heart}
+				class="w-6 h-6 hover:fill-red-500 hover:stroke-red-500 cursor-pointer transition-colors"
+			/>
+		</button>
 		<p>0 Likes</p>
 	</div>
 	<p>

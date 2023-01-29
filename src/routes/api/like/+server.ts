@@ -15,6 +15,19 @@ export const POST: RequestHandler = async ({ url }) => {
 
     const col = await getCollection("likes");
 
+    const ref = await col.findOne({
+        postId: postId,
+        uid: uid,
+    });
+
+    if (ref) {
+        return json({
+            message: "Already liked",
+        }, {
+            status: 400,
+        })
+    }
+
     await col.insertOne({
         postId: postId,
         uid: uid,
