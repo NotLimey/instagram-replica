@@ -17,6 +17,9 @@
 	};
 </script>
 
-<div class="min-h-[300px] flex justify-center items-center">
-	<button on:click={login}> Login with google </button>
+<div class="flex justify-center items-center flex-col mb-12">
+	<h2 class="w-full mb-2 text-xl">Login</h2>
+	<button on:click={login} class="border border-stone-900 w-full py-1.5 px-2">
+		Login with google
+	</button>
 </div>

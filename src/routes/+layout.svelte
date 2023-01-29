@@ -7,6 +7,7 @@
 	import { loading, token, user } from '../stores/auth.store';
 	import { Toaster } from 'svelte-french-toast';
 	import Navbar from '$components/Navbar.svelte';
+	import Register from '$components/Register.svelte';
 
 	const unsubscribe = onAuthStateChanged(auth, async (u) => {
 		user.set(u);
@@ -39,6 +40,7 @@
 	{:else}
 		<main class="my-12 mx-auto px-5 max-w-xl">
 			<Login />
+			<Register />
 		</main>
 	{/if}
 </div>

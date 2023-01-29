@@ -1,15 +1,15 @@
 import { getCollection } from "$lib/mongo";
 import { json } from "@sveltejs/kit";
 import { ObjectId } from "mongodb";
-import type { RequestHandler } from "./$types";
+import type { RequestHandler } from "../$types";
 
 export const POST: RequestHandler = async ({ request, url }) => {
 
     const col = await getCollection("users");
 
-    const { displayName, photoURL, uid, email } = await request.json();
+    const { uid } = await request.json();
 
-    if (!displayName || !photoURL || !uid || !email) {
+    if (!uid) {
         return json({
             message: "Missing required fields",
         }, {
@@ -17,18 +17,17 @@ export const POST: RequestHandler = async ({ request, url }) => {
         })
     }
 
-    await col.updateOne({
+    const existingUser = await col.findOne({
         uid: uid,
-    }, {
-        $set: {
-            displayName: displayName,
-            photoURL: photoURL,
-            email: email,
-            uid: uid
-        }
-    }, {
-        upsert: true,
-    })
+    });
+
+    if (!existingUser) {
+        return json({
+            message: "User does not exist",
+        }, {
+            status: 400,
+        })
+    }
 
     return json({}, {
         status: 201,
