@@ -8,7 +8,7 @@
 	let posts: Post[] = [];
 
 	onMount(async () => {
-		const res = await fetcher($token, `/api/posts?uid=${$user?.uid}`);
+		const res = await fetcher($token, `/api/posts`);
 		posts = await res.data;
 	});
 </script>

@@ -43,7 +43,7 @@
 	};
 </script>
 
-<div>
+<a href="/posts/{post._id}" class="">
 	<div class="flex items-center gap-x-2 mb-2">
 		<p class="text-xl">Martin Myhre</p>
 		<span class="w-1 h-1 bg-gray-100 rounded-full" />
@@ -72,4 +72,4 @@
 	<p class="text-stone-300">
 		{post.description}
 	</p>
-</div>
+</a>

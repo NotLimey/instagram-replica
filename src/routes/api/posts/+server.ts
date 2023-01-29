@@ -41,7 +41,7 @@ export const GET: RequestHandler = async ({ url, request }) => {
     }
 
     const skip = url.searchParams.get("skip");
-    const uid = url.searchParams.get("uid");
+    const uid = user.uid;
 
     if (!uid) {
         return json({
