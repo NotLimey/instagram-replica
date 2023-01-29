@@ -1,4 +1,5 @@
 
+import { getUser } from "$lib/auth/getUser";
 import clientPromise, { getCollection } from "$lib/mongo";
 import { json, type RequestHandler } from "@sveltejs/kit";
 
@@ -28,7 +29,17 @@ export const POST: RequestHandler = async ({ request }) => {
     })
 }
 
-export const GET: RequestHandler = async ({ url }) => {
+export const GET: RequestHandler = async ({ url, request }) => {
+    const user = await getUser(request);
+
+    if (!user) {
+        return json({
+            message: "You are not authenticated",
+        }, {
+            status: 401,
+        })
+    }
+
     const skip = url.searchParams.get("skip");
     const uid = url.searchParams.get("uid");
 
