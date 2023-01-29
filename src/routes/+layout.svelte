@@ -4,11 +4,16 @@
 	import { onDestroy } from 'svelte';
 	import '../app.css';
 	import Login from '../components/Login.svelte';
-	import { user } from '../stores/auth.store';
+	import { token, user } from '../stores/auth.store';
 	import { Toaster } from 'svelte-french-toast';
 	import Navbar from '$components/Navbar.svelte';
 
-	const unsubscribe = onAuthStateChanged(auth, (u) => user.set(u));
+	const unsubscribe = onAuthStateChanged(auth, async (u) => {
+		user.set(u);
+		if (!u) return;
+		const t = await u.getIdToken();
+		token.set(t);
+	});
 
 	onDestroy(() => {
 		unsubscribe();

@@ -1,14 +1,15 @@
 <script lang="ts">
 	import PostComponent from '$components/PostComponent.svelte';
-	import { user } from '$stores/auth.store';
+	import { token, user } from '$stores/auth.store';
 	import { onMount } from 'svelte';
 	import type { Post } from '../types/post.types';
+	import fetcher from '../utils/fetcher';
 
 	let posts: Post[] = [];
 
 	onMount(async () => {
-		const res = await fetch(`/api/posts?uid=${$user?.uid}`);
-		posts = await res.json();
+		const res = await fetcher($token, `/api/posts?uid=${$user?.uid}`);
+		posts = await res.data;
 	});
 </script>
 
@@ -17,7 +18,7 @@
 		>Add post</a
 	>
 </div>
-<div class="flex flex-col gap-y-4 mt-6">
+<div class="flex flex-col gap-y-8 mt-6">
 	{#each posts as post}
 		<PostComponent {post} />
 	{/each}

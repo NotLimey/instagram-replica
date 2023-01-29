@@ -69,7 +69,7 @@
 		</button>
 		<p>{post.likes} Likes</p>
 	</div>
-	<p>
+	<p class="text-stone-300">
 		{post.description}
 	</p>
 </div>
