@@ -2,11 +2,8 @@ import { getUser } from "$lib/auth/getUser";
 import { getCollection } from "$lib/mongo";
 import { json, type RequestHandler } from "@sveltejs/kit";
 import { ObjectId } from "mongodb";
-import { increment } from "./increment";
 
-export const POST: RequestHandler = async (data) => increment(data);
-
-export const DELETE: RequestHandler = async ({ url, request }) => {
+export const increment: RequestHandler = async ({ request, url }) => {
     const user = await getUser(request);
 
     if (!user) {
@@ -17,6 +14,7 @@ export const DELETE: RequestHandler = async ({ url, request }) => {
         })
     }
     const { uid } = user;
+
     const postId = url.searchParams.get("postId");
 
     if (!postId || !uid) {
@@ -34,9 +32,9 @@ export const DELETE: RequestHandler = async ({ url, request }) => {
         uid: uid,
     });
 
-    if (!existingLike) {
+    if (existingLike) {
         return json({
-            message: "You haven't liked this post",
+            message: "You have already liked this post",
         }, {
             status: 400,
         })
@@ -47,16 +45,16 @@ export const DELETE: RequestHandler = async ({ url, request }) => {
         _id: new ObjectId(postId),
     }, {
         $inc: {
-            likes: -1,
+            likes: 1,
         },
     })
 
-    likes.deleteOne({
+    likes.insertOne({
         postId: new ObjectId(postId),
         uid: uid,
     })
 
     return json({}, {
         status: 201,
-    });
+    })
 }

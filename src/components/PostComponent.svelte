@@ -1,5 +1,6 @@
 <script lang="ts">
-	import { user } from '$stores/auth.store';
+	import { token, user } from '$stores/auth.store';
+	import fetcher from '$utils/fetcher';
 	import getTimeSincePost from '$utils/getTimeSincePost';
 	import { Chat, Icon, Heart } from 'svelte-hero-icons';
 	import type { Post } from '../types/post.types';
@@ -7,9 +8,13 @@
 	export let post: Post;
 
 	const like = async () => {
-		await fetch(`/api/posts/like?postId=${post._id}&uid=${$user?.uid}`, {
-			method: post.liked ? 'DELETE' : 'POST',
-		});
+		await fetcher(
+			$token,
+			`/api/posts/like?postId=${post._id}&uid=${$user?.uid}`,
+			{
+				method: post.liked ? 'DELETE' : 'POST',
+			}
+		);
 		post.likes = post.likes + (post.liked ? -1 : 1);
 		post.liked = !post.liked;
 	};
