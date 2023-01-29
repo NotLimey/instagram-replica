@@ -17,7 +17,7 @@ export const POST: RequestHandler = async ({ url }) => {
     const likes = await getCollection("likes");
 
     const existingLike = await likes.findOne({
-        postId: postId,
+        postId: new ObjectId(postId),
         uid: uid,
     });
 
@@ -39,7 +39,7 @@ export const POST: RequestHandler = async ({ url }) => {
     })
 
     likes.insertOne({
-        postId: postId,
+        postId: new ObjectId(postId),
         uid: uid,
     })
 
@@ -63,7 +63,7 @@ export const DELETE: RequestHandler = async ({ url }) => {
     const likes = await getCollection("likes");
 
     const existingLike = await likes.findOne({
-        postId: postId,
+        postId: new ObjectId(postId),
         uid: uid,
     });
 
@@ -85,7 +85,7 @@ export const DELETE: RequestHandler = async ({ url }) => {
     })
 
     likes.deleteOne({
-        postId: postId,
+        postId: new ObjectId(postId),
         uid: uid,
     })
 

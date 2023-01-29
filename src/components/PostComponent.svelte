@@ -7,9 +7,10 @@
 
 	const like = async () => {
 		await fetch(`/api/like?postId=${post._id}&uid=${$user?.uid}`, {
-			method: 'POST',
+			method: post.liked ? 'DELETE' : 'POST',
 		});
-		post.likes = post.likes + 1;
+		post.likes = post.likes + (post.liked ? -1 : 1);
+		post.liked = !post.liked;
 	};
 </script>
 
@@ -32,7 +33,9 @@
 		<button on:click={like}>
 			<Icon
 				src={Heart}
-				class="w-6 h-6 hover:fill-red-500 hover:stroke-red-500 cursor-pointer transition-colors"
+				class="w-6 h-6 hover:fill-red-500 hover:stroke-red-500 {post.liked
+					? 'fill-red-500 stroke-red-500'
+					: ''} cursor-pointer transition-colors"
 			/>
 		</button>
 		<p>{post.likes} Likes</p>

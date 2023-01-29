@@ -7,4 +7,5 @@ export type Post = {
     uid: string;
     addedAt: Date;
     likes: number;
+    liked: boolean;
 }
