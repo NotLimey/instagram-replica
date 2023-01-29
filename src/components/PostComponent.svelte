@@ -9,6 +9,7 @@
 		await fetch(`/api/like?postId=${post._id}&uid=${$user?.uid}`, {
 			method: 'POST',
 		});
+		post.likes = post.likes + 1;
 	};
 </script>
 
@@ -18,7 +19,11 @@
 		<span class="w-1 h-1 bg-gray-100 rounded-full" />
 		<p class="text-gray-200">2 hours</p>
 	</div>
-	<img src={post.url} alt="" class="aspect-square object-cover rounded-md" />
+	<img
+		src={post.url}
+		alt=""
+		class="aspect-square object-cover rounded-md min-w-full"
+	/>
 	<div class="py-2 flex items-center gap-x-2">
 		<Icon
 			src={Chat}
@@ -30,7 +35,7 @@
 				class="w-6 h-6 hover:fill-red-500 hover:stroke-red-500 cursor-pointer transition-colors"
 			/>
 		</button>
-		<p>0 Likes</p>
+		<p>{post.likes} Likes</p>
 	</div>
 	<p>
 		{post.description}

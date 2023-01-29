@@ -20,6 +20,7 @@ export const POST: RequestHandler = async ({ request }) => {
         description: description,
         uid: uid,
         addedAt: new Date(),
+        likes: 0,
     })
 
     return json({}, {
