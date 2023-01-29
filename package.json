@@ -24,6 +24,7 @@
 	"type": "module",
 	"dependencies": {
 		"firebase": "^9.16.0",
+		"svelte-french-toast": "^1.0.3",
 		"svelte-hero-icons": "^4.1.3"
 	}
 }

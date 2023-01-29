@@ -5,6 +5,7 @@
 	import '../app.css';
 	import Login from '../components/Login.svelte';
 	import { user } from '../stores/auth.store';
+	import { Toaster } from 'svelte-french-toast';
 
 	const unsubscribe = onAuthStateChanged(auth, (u) => user.set(u));
 
@@ -13,6 +14,11 @@
 	});
 </script>
 
+<Toaster
+	toastOptions={{
+		className: 'bg-gray-800 text-white',
+	}}
+/>
 <div class="my-12 mx-auto px-5 max-w-xl">
 	{#if $user}
 		<main><slot /></main>

@@ -1,9 +1,22 @@
 <script lang="ts">
+	import { storage } from '$lib/firebase';
+	import { generateId } from '$lib/id/generateId';
+	import { getDownloadURL, ref, uploadBytes } from 'firebase/storage';
+	import toast from 'svelte-french-toast';
+
 	let file: File | null = null;
 	let description: string = '';
 
 	const onSubmit = async () => {
-		console.log(file);
+		if (!file) return toast.error('Please add an image');
+		const storageRef = ref(storage, `images/${generateId()}_${file?.name}`);
+		const uploadRef = await uploadBytes(storageRef, file as Blob);
+		const url = await getDownloadURL(uploadRef.ref);
+
+		const data = {
+			description,
+			url,
+		};
 	};
 </script>
 
