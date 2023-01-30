@@ -21,7 +21,7 @@ Used as a replacement for css
 ## Wanna test it?
 
 You need to define these in `.env` file in root
-```
+```env
 PUBLIC_FIREBASE_API_KEY=[Firebase api key here]
 PUBLIC_FIREBASE_AUTH_DOMAIN=[Firebase auth domain here]
 PUBLIC_FIREBASE_PROJECT_ID=[Firebase project id here]
