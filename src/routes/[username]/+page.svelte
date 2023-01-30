@@ -11,16 +11,24 @@
 	};
 
 	let follows: null | boolean = null;
+	let loading = true;
 
 	onMount(async () => {
 		const res = await fetcher($token, `/api/users/follow?uid=${data.user.uid}`);
 		follows = await res.data.follows;
+		loading = false;
 	});
 
 	const follow = async () => {
+		if (loading) return;
+		loading = true;
+		const f = follows;
+		follows = !follows;
+		data.user.followers += follows ? 1 : -1;
 		await fetcher($token, `/api/users/follow?uid=${data.user.uid}`, {
-			method: follows ? 'DELETE' : 'POST',
+			method: f ? 'DELETE' : 'POST',
 		});
+		loading = false;
 	};
 </script>
 
