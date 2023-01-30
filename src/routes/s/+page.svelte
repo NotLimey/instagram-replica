@@ -17,6 +17,7 @@
 			},
 		});
 		users = await res.data;
+		loading = false;
 	};
 </script>
 
@@ -30,6 +31,9 @@
 </div>
 
 <div class="flex flex-col gap-y-3 mt-8">
+	{#if loading}
+		<p>Loading...</p>
+	{/if}
 	{#each users as user}
 		<a
 			href="/{user.userName}"
