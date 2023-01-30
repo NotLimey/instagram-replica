@@ -42,7 +42,7 @@
 	</div>
 </div>
 
-<div class="flex flex-col gap-y-2 mt-6">
+<div class="flex flex-col gap-y-4 mt-6">
 	<h2 class="mb-2">Comments</h2>
 	{#each data.comments as comment}
 		<div class="flex gap-x-2">
