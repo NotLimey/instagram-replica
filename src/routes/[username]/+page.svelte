@@ -1,7 +1,8 @@
 <script lang="ts">
 	import { token, user } from '$stores/auth.store';
 	import fetcher from '$utils/fetcher';
-	import type { Account, DetailedAccount } from '../../types/auth.types';
+	import { onMount } from 'svelte';
+	import type { DetailedAccount } from '../../types/auth.types';
 	import type { Post } from '../../types/post.types';
 
 	export let data: {
@@ -9,9 +10,16 @@
 		posts: Post[];
 	};
 
+	let follows: null | boolean = null;
+
+	onMount(async () => {
+		const res = await fetcher($token, `/api/users/follow?uid=${data.user.uid}`);
+		follows = await res.data.follows;
+	});
+
 	const follow = async () => {
 		await fetcher($token, `/api/users/follow?uid=${data.user.uid}`, {
-			method: 'POST',
+			method: follows ? 'DELETE' : 'POST',
 		});
 	};
 </script>
@@ -39,13 +47,14 @@
 				class="bg-red-500/20 px-1 py-0.5 rounded-md mt-4 block text-center text-red-500 text-xs"
 				>Signout</a
 			>
-		{:else}
+		{:else if follows !== null}
 			<div class="flex justify-start gap-x-3 mt-4">
 				<button
 					on:click={follow}
 					class="bg-stone-900 px-3 py-1 rounded-lg hover:bg-stone-800"
-					>Follow</button
 				>
+					{follows ? 'Unfollow' : 'Follow'}
+				</button>
 			</div>
 		{/if}
 	</div>
